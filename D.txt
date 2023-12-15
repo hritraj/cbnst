@@ -30,7 +30,7 @@ SELECT * FROM Student WHERE Gender = 'F' AND Course = 'Comp' AND Category = 'OBC
 
 SELECT Sid, Sname, EXTRACT(YEAR FROM CURRENT_DATE) - EXTRACT(YEAR FROM DOB) AS Age FROM Student;
 
-SELECT * FROM Student ORDER BY Course, Sname ASC;
+SELECT * FROM Student ORDER BY Sname ASC;
 
 DELETE FROM Student WHERE Course = 'Comp' AND EXTRACT(YEAR FROM DOB) > 2002;
 
