@@ -1,0 +1,61 @@
+CREATE TABLE supplier (
+    sup_no VARCHAR(5) PRIMARY KEY,
+    sup_name VARCHAR(50),
+    item_supplied VARCHAR(50),
+    item_price DECIMAL(10, 2),
+    city VARCHAR(50)
+);
+INSERT INTO supplier (sup_no, sup_name, item_supplied, item_price, city)
+VALUES
+    ('s1', 'suresh', 'keyboard', 400, 'hyderabad'),
+    ('s2', 'kiran', 'processor', 8000, 'delhi'),
+    ('s3', 'mohan', 'mouse', 350, 'delhi'),
+    ('s4', 'ramesh', 'processor', 9000, 'banglore'),
+    ('s5', 'manish', 'printer', 6000, 'mumbai'),
+    ('s6', 'srikanth', 'processor', 8500, 'chennai');
+    
+    describe supplier;
+    
+    Select * from supplier;
+    
+SELECT sup_no, sup_name
+FROM supplier
+WHERE sup_name LIKE 'r%';
+
+SELECT sup_name
+FROM supplier
+WHERE item_supplied = 'processor' AND city = 'delhi';
+
+SELECT DISTINCT s1.sup_name
+FROM supplier s1, supplier s2
+WHERE s1.item_supplied = s2.item_supplied AND s2.sup_name = 'ramesh';
+
+SET sql_safe_updates=0;
+
+UPDATE supplier
+SET item_price = item_price + 200
+WHERE item_supplied = 'keyboard';
+
+SELECT sup_no, sup_name, item_price
+FROM supplier
+WHERE city = 'delhi'
+ORDER BY item_price ASC;
+
+ALTER TABLE supplier
+ADD COLUMN contact_no VARCHAR(15);
+
+DELETE FROM supplier
+WHERE item_price = (SELECT MIN(item_price) FROMsupplier);
+
+CREATE VIEW supplier_names_view AS
+SELECT sup_no, sup_name
+FROM supplier;
+
+SELECT sup_no, sup_name, item_supplied, item_price
+FROM supplier
+ORDER BY  item_price DESC;
+
+SELECT *
+FROM supplier
+WHERE item_supplied NOT IN ('processor', 'keyboard');
+

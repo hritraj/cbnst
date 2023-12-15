@@ -1,0 +1,39 @@
+CREATE TABLE Library (
+    BookId VARCHAR(4) PRIMARY KEY,
+    BookName VARCHAR(50) NOT NULL,
+    Author VARCHAR(50),
+    DatePurchased DATE,
+    Publisher VARCHAR(50),
+    Price DECIMAL(10, 2)
+);
+
+INSERT INTO Library (BookId, BookName, Author, DatePurchased, Publisher, Price)
+VALUES
+    ('B101', 'Cost Accounting', 'Jain Narang', '2013-02-11', 'Kalyani', 800),
+    ('B102', 'Business Statistics', 'OP Aggarwal', '2011-12-22', 'Himalaya', 750),
+    ('B103', 'Rdbms', 'C J Date', '2015-03-02', 'TMH', 900),
+    ('B104', 'Mgmt Accounting', 'RK Sharma', '2016-04-19', 'Kalyani', 450),
+    ('B105', 'Operating Systems', 'Galvin', '2013-11-25', 'PHI', 750),
+    ('B106', 'Advanced Accounting', 'SC Gupta', '2018-04-16', 'Himalaya', 600);
+
+SELECT DISTINCT Author FROM Library WHERE Publisher = 'Himalaya';
+
+SELECT Publisher, SUM(Price) AS TotalCost FROM Library GROUP BY Publisher;
+
+SELECT COUNT(*) AS TotalBooks FROM Library WHERE Publisher = 'Kalyani';
+
+ALTER TABLE Library
+RENAME COLUMN Publisher TO Publications;
+
+SELECT * FROM Library ORDER BY DatePurchased ASC;
+
+CREATE INDEX idx_BookName_Author ON Library (BookName, Author);
+
+SELECT * FROM Library WHERE Price BETWEEN 500 AND 700;
+
+UPDATE Library SET Price = Price + 200 WHERE Publications NOT IN ('Himalaya', 'Kalyani');
+
+SELECT * FROM Library WHERE Author LIKE '%Sharma%';
+
+CREATE VIEW HimalayaBooksView AS
+        SELECT BookId, BookName FROM Library WHERE Publications = 'Himalaya';

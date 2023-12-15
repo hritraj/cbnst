@@ -1,0 +1,276 @@
+QUESTION A
+
+CREATE TABLE supplier (
+    sup_no VARCHAR(5) PRIMARY KEY,
+    sup_name VARCHAR(50),
+    item_supplied VARCHAR(50),
+    item_price DECIMAL(10, 2),
+    city VARCHAR(50)
+);
+INSERT INTO supplier (sup_no, sup_name, item_supplied, item_price, city)
+VALUES
+    ('s1', 'suresh', 'keyboard', 400, 'hyderabad'),
+    ('s2', 'kiran', 'processor', 8000, 'delhi'),
+    ('s3', 'mohan', 'mouse', 350, 'delhi'),
+    ('s4', 'ramesh', 'processor', 9000, 'banglore'),
+    ('s5', 'manish', 'printer', 6000, 'mumbai'),
+    ('s6', 'srikanth', 'processor', 8500, 'chennai');
+    
+    describe supplier;
+    
+    Select * from supplier;
+    
+SELECT sup_no, sup_name
+FROM supplier
+WHERE sup_name LIKE 'r%';
+
+SELECT sup_name
+FROM supplier
+WHERE item_supplied = 'processor' AND city = 'delhi';
+
+SELECT DISTINCT s1.sup_name
+FROM supplier s1, supplier s2
+WHERE s1.item_supplied = s2.item_supplied AND s2.sup_name = 'ramesh';
+
+SET sql_safe_updates=0;
+
+UPDATE supplier
+SET item_price = item_price + 200
+WHERE item_supplied = 'keyboard';
+
+SELECT sup_no, sup_name, item_price
+FROM supplier
+WHERE city = 'delhi'
+ORDER BY item_price ASC;
+
+ALTER TABLE supplier
+ADD COLUMN contact_no VARCHAR(15);
+
+DELETE FROM supplier
+WHERE item_price = (SELECT MIN(item_price) FROMsupplier);
+
+CREATE VIEW supplier_names_view AS
+SELECT sup_no, sup_name
+FROM supplier;
+
+SELECT sup_no, sup_name, item_supplied, item_price
+FROM supplier
+ORDER BY  item_price DESC;
+
+SELECT *
+FROM supplier
+WHERE item_supplied NOT IN ('processor', 'keyboard');
+
+
+
+
+
+
+
+QUESTION B
+
+CREATE TABLE EmpDetails (
+    Eid VARCHAR(5) PRIMARY KEY,
+    Ename VARCHAR(50),
+    DOB DATE,
+    Designation VARCHAR(50),
+    Salary DECIMAL(10, 2),
+    DOJ DATE
+);
+INSERT INTO EmpDetails (Eid, Ename, DOB, Designation, Salary, DOJ)
+VALUES
+    ('E101', 'Suma', '1989-12-29', 'Designer', 20000, '2010-04-01'),
+    ('E102', 'Amit', '1995-01-10', 'Programmer', 25000, '2018-02-18'),
+    ('E103', 'Payal', '1985-08-15', 'Tester', 35000, '2011-06-13'),
+    ('E104', 'Kiran', '1990-04-20', 'Programmer', 40000, '2014-03-07'),
+    ('E105', 'Meenal', '1983-05-29', 'DBA', 50000, '2011-12-09'),
+    ('E106', 'Sheila', '1970-05-01', 'Analyst', 60000, '2018-09-25'),
+    ('E107', 'Swamy', '1985-01-13', 'Programmer', 45000, '2016-02-14'),
+    ('E108', 'Sushma', '1976-12-22', 'DBA', 45000, '2012-01-31');
+    
+
+SELECT * FROM EmpDetails WHERE Designation = 'Programmer';
+
+SELECT * FROM EmpDetails WHERE DOJ > '2014-01-01';
+
+SELECT * FROM EmpDetails WHERE Ename LIKE '%a';
+
+SELECT SUM(Salary) as TotalSalary FROM EmpDetails WHERE Designation = 'Programmer';
+
+SELECT UPPER(Ename) as UppercaseName FROM EmpDetails;
+
+SELECT * FROM EmpDetails ORDER BY DOJ ASC LIMIT 1;
+
+SELECT * FROM EmpDetails WHERE Ename LIKE '%ee%';
+
+UPDATE EmpDetails SET Salary = Salary + 5000 WHERE Designation = 'DBA';
+
+SELECT * FROM EmpDetails WHERE Salary > (SELECT AVG(Salary) FROM EmpDetails);
+
+SELECT CONCAT(Ename, ' is working as ', Designation, ' with a Salary of Rs.', Salary) as EmpInfo FROM EmpDetails;
+
+
+
+
+
+Question C
+
+CREATE TABLE Department (
+    DeptId VARCHAR(2) PRIMARY KEY,
+    Dname VARCHAR(50) NOT NULL
+);
+
+INSERT INTO Department (DeptId, Dname)
+VALUES
+    ('D1', 'Sales'),
+    ('D2', 'Marketing'),
+    ('D3', 'Finance');
+
+CREATE TABLE Employee (
+    Eid VARCHAR(5) PRIMARY KEY,
+    Ename VARCHAR(50),
+    DeptId VARCHAR(2),
+    Designation VARCHAR(50),
+    Salary DECIMAL(10, 2) CHECK (Salary > 10000),
+    DOJ DATE,
+    FOREIGN KEY (DeptId) REFERENCES Department(DeptId)
+);
+
+INSERT INTO Employee (Eid, Ename, DeptId, Designation, Salary, DOJ)
+VALUES
+    ('101', 'Sudha', 'D2', 'Clerk', 20000, '2010-04-01'),
+    ('102', 'David', 'D1', 'Manager', 50000, '2018-02-18'),
+    ('103', 'Preethi', 'D3', 'Clerk', 35000, '2011-06-13'),
+    ('104', 'Kiran', 'D1', 'Salesman', 20000, '2014-03-07'),
+    ('105', 'Meenal', 'D2', 'Clerk', 50000, '2011-12-09'),
+    ('106', 'Sunitha', 'D3', 'Manager', 60000, '2018-09-25'),
+    ('107', 'Akhil', 'D3', 'Clerk', 25000, '2016-02-14'),
+    ('108', 'Sushma', 'D2', 'Manager', 45000, '2012-01-31');
+    
+SELECT * FROM Employee WHERE Salary > (SELECT AVG(Salary) FROM Employee);
+
+SELECT Employee.Eid, Ename, Dname
+       FROM Employee
+       JOIN Department ON Employee.DeptId = Department.DeptId;
+
+SELECT * FROM Employee ORDER BY Salary DESC;
+
+SELECT DISTINCT Designation FROM Employee;
+
+SELECT Employee.*, Dname
+        FROM Employee
+        JOIN Department ON Employee.DeptId = Department.DeptId
+        ORDER BY Department.DeptId, Salary ASC;
+
+SELECT * FROM Employee WHERE Designation = 'Clerk' AND DeptId = 'D2';
+
+SELECT * FROM Employee WHERE EXTRACT(YEAR FROM DOJ) = 2011;
+
+SELECT * FROM Employee WHERE EXTRACT(MONTH FROM DOJ) = 2;
+
+SELECT * FROM Employee WHERE Salary BETWEEN 30000 AND 45000;
+
+SELECT *,
+       EXTRACT(YEAR FROM current_date) -EXTRACT(YEAR FROM DOJ) AS WorkExperience  FROM Employee;
+
+
+
+
+
+
+
+QUESTION D
+
+CREATE TABLE Student (
+    Sid VARCHAR(4) PRIMARY KEY,
+    Sname VARCHAR(50),
+    DOB DATE,
+    State VARCHAR(50),
+    Gender CHAR(1),
+    Category VARCHAR(50),
+    Course VARCHAR(50)
+);
+
+INSERT INTO Student (Sid, Sname, DOB, State, Gender, Category, Course)
+VALUES
+    ('1001', 'Neha', '2002-12-29', 'Telangana', 'F', 'Gen', 'Comp'),
+    ('1002', 'Arun', '2002-01-10', 'Telangana', 'M', 'OBC', 'Honors'),
+    ('1003', 'Payal', '2001-08-15', 'Maharashtra', 'F', 'Gen', 'Appl'),
+    ('1004', 'Amrita', '2002-04-20', 'Karnataka', 'F', 'OBC', 'Honors'),
+    ('1005', 'Pavan', '2003-05-29', 'AndhraPradesh', 'M', 'ExServicemen', 'Comp'),
+    ('1006', 'Anchal', '2003-05-01', 'Gujarat', 'F', 'OBC', 'Comp'),
+    ('1007', 'Ramya', '2002-01-13', 'Telangana', 'F', 'Gen', 'Appl'),
+    ('1008', 'Rakesh', '2001-12-22', 'AndhraPradesh', 'M', 'Sports', 'Comp');
+
+SELECT * FROM Student WHERE State NOT IN ('Telangana', 'AndhraPradesh');
+
+CREATE VIEW TelanganaStudentsView AS
+SELECT Sid, Sname FROM Student WHERE State = 'Telangana';
+
+CREATE INDEX idx_Sname ON Student (Sname);
+
+SELECT * FROM Student WHERE Gender = 'F' AND Course = 'Comp' AND Category = 'OBC';
+
+SELECT Sid, Sname, EXTRACT(YEAR FROM CURRENT_DATE) - EXTRACT(YEAR FROM DOB) AS Age FROM Student;
+
+SELECT * FROM Student ORDER BY Course, Sname ASC;
+
+DELETE FROM Student WHERE Course = 'Comp' AND EXTRACT(YEAR FROM DOB) > 2002;
+
+ALTER TABLE Student
+ADD COLUMN Contactno VARCHAR(15),
+ADD COLUMN Email VARCHAR(50);
+
+SELECT  CONCAT(CASE WHEN Gender = 'M' THEN 'Mr.' ELSE 'Ms.' END, ' ', Sname) AS PrefixedName
+FROM Student;
+
+SELECT * FROM Student WHERE LENGTH(Sname) = 5;
+
+
+
+
+
+
+Question E
+
+CREATE TABLE Library (
+    BookId VARCHAR(4) PRIMARY KEY,
+    BookName VARCHAR(50) NOT NULL,
+    Author VARCHAR(50),
+    DatePurchased DATE,
+    Publisher VARCHAR(50),
+    Price DECIMAL(10, 2)
+);
+
+INSERT INTO Library (BookId, BookName, Author, DatePurchased, Publisher, Price)
+VALUES
+    ('B101', 'Cost Accounting', 'Jain Narang', '2013-02-11', 'Kalyani', 800),
+    ('B102', 'Business Statistics', 'OP Aggarwal', '2011-12-22', 'Himalaya', 750),
+    ('B103', 'Rdbms', 'C J Date', '2015-03-02', 'TMH', 900),
+    ('B104', 'Mgmt Accounting', 'RK Sharma', '2016-04-19', 'Kalyani', 450),
+    ('B105', 'Operating Systems', 'Galvin', '2013-11-25', 'PHI', 750),
+    ('B106', 'Advanced Accounting', 'SC Gupta', '2018-04-16', 'Himalaya', 600);
+
+SELECT DISTINCT Author FROM Library WHERE Publisher = 'Himalaya';
+
+SELECT Publisher, SUM(Price) AS TotalCost FROM Library GROUP BY Publisher;
+
+SELECT COUNT(*) AS TotalBooks FROM Library WHERE Publisher = 'Kalyani';
+
+ALTER TABLE Library
+RENAME COLUMN Publisher TO Publications;
+
+SELECT * FROM Library ORDER BY DatePurchased ASC;
+
+CREATE INDEX idx_BookName_Author ON Library (BookName, Author);
+
+SELECT * FROM Library WHERE Price BETWEEN 500 AND 700;
+
+UPDATE Library SET Price = Price + 200 WHERE Publications NOT IN ('Himalaya', 'Kalyani');
+
+SELECT * FROM Library WHERE Author LIKE '%Sharma%';
+
+CREATE VIEW HimalayaBooksView AS
+        SELECT BookId, BookName FROM Library WHERE Publications = 'Himalaya';
+
+
